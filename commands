@@ -3,5 +3,4 @@ eval "$(docker-machine env default)"
 write Dockerfile 
 docker build -t devops/hw4task1 .
 docker run -d --name fileout task1fileout
-docker run -it --link fileout:fileout --name filein task1filein sh
-/ # curl fileout:9001
+docker run --link fileout:fileout --name filein task1filein
