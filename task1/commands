@@ -1,0 +1,6 @@
+docker-machine env default
+eval "$(docker-machine env default)"
+
+docker build -t task1fileout .
+docker run -d --name fileout task1fileout
+docker run ¡ªit link fileout:fileout --name filein task1filein
