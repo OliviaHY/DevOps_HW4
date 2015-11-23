@@ -1,22 +1,22 @@
 ##DevOps HW4
 
 ### File IO
-#####Build two images:    
+#####build two images:    
 In task1/node0 fold, run `docker build -t task1fileout .`    
 In task1/node1 fold, run `docker build -t task1filein .`
-#####Run two container from those images:   
+#####run two container from those images:   
 `docker run -d --name fileout task1fileout`    
 `docker run —it link fileout:fileout --name filein task1filein`
 
-#####Demo:
+#####demo:
 ![fileio](images/t1i1.gif)
 
 ### Ambassador pattern
-##### two vagrant vitual machine    
+##### two vagrant vitual machine:    
 `vagrant init ubuntu/trusty64`
 uncomment `config.vm.network "public_network"` in Vagrantfile to use Bridged network attachment type, then choose the first option.
 
-#### download docker and docker-compose in vm
+##### download docker and docker-compose in vm:
 
 ```
 curl -sSL https://get.docker.com/ | sh
@@ -28,7 +28,7 @@ sudo -i
 
 ```
 
-##### containers
+##### containers:
 In host1(ip: 10.139.56.55), run a redis container using   
 `docker run -d --name redis crosbymichael/redis`     
 And a redis_ambassador container, which map the host 6379 port to the container 6379 port:    
@@ -39,7 +39,7 @@ The command set the environment varible REDIS_PORT_6379_TCP to the ip and port o
 Then run a client container using:   
 `docker run -i -t --rm --link redis_ambassador:redis relateiq/redis-cli`    
 The client container will be linked to the redis_ambassador.
-##### docker-compose
+##### docker-compose:
 stop and rm all container using    
 `sudo docker stop $(docker ps -a -q)`       
 `sudo docker rm $(docker ps -a -q)`
@@ -87,9 +87,9 @@ run redis command in client:
 `SET key 'Hello!'`
 `GET key`
 
-#####Demo
+#####demos:
 ![task2](images/t2i2.gif)    
-client perform 'SET/GET'     
+Client performs 'SET/GET'     
 ![task2](images/t2i3.gif)
 
 ### Docker Deploy
@@ -102,7 +102,7 @@ First start a private registry listening on port 5000:
 Then add hooks as below.
 
 
-##### App:
+##### app:
 
 Post-commit hook will build a new image task3app and push it to local registry:
 
@@ -114,9 +114,9 @@ docker tag task3app localhost:5000/task3app:latest
 docker push localhost:5000/task3app:latest
 ```
 
-##### Deployment:
+##### deployment:
 
-post-receive hook will pull the task3app image, stop and delete old container, then restart it: (Depends on the slice, change 'blue' and 'green' keyword accordingly)
+Post-receive hook will pull the task3app image, stop and delete old container, then restart it: (depends on the slice, change 'blue' and 'green' keyword accordingly)
 
 ```
 #!/bin/sh
