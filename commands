@@ -1,6 +1,0 @@
-docker-machine env default
-eval "$(docker-machine env default)"
-write Dockerfile 
-docker build -t devops/hw4task1 .
-docker run -d --name fileout task1fileout
-docker run --link fileout:fileout --name filein task1filein
