@@ -116,10 +116,10 @@ docker push localhost:5000/task3app:latest
 
 ##### Deployment:
 
-post-receive hook will pull the task3app image, stop then delete container, and restart it:
+post-receive hook will pull the task3app image, stop and delete old container, then restart it:
 
 ```
-\#!/bin/sh
+#!/bin/sh
 
 GIT_WORK_TREE=/Users/Huangying/Repositories/DevOps_HW4/task3/Deployment/deploy/green-www/ git checkout -f
 cd ..
