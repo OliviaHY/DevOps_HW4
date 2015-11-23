@@ -93,6 +93,52 @@ client perform 'SET/GET'
 ![task2](images/t2i3.gif)
 
 ### Docker Deploy
+Extend from [Deployment](https://github.com/CSC-DevOps/Deployment) and [Advanced Docker](https://github.com/CSC-DevOps/Course/blob/master/Workshops/AdvancedDocker.md) workshop.
+
+First start a private registry listening on port 5000:
+
+`docker run -d -p 5000:5000 --restart=always --name registry registry:2`
+
+Then add hooks as below.
+
+
+##### App:
+
+Post-commit hook will build a new image task3app and push it to local registry:
+
+```
+#!/bin/bash
+docker rmi task3app
+docker build -t task3app /Users/Huangying/Repositories/DevOps_HW4/task3/App
+docker tag task3app localhost:5000/task3app:latest
+docker push localhost:5000/task3app:latest
+```
+
+##### Deployment:
+
+post-receive hook will pull the task3app image, stop then delete container, and restart it:
+
+```
+\#!/bin/sh
+
+GIT_WORK_TREE=/Users/Huangying/Repositories/DevOps_HW4/task3/Deployment/deploy/green-www/ git checkout -f
+cd ..
+cd green-www
+npm install
+docker pull localhost:5000/task3app:latest
+docker stop app
+docker rm app
+docker rmi localhost:5000/task3app:blue
+docker tag localhost:5000/task3app:latest localhost:5000/task3app:blue
+docker run -p 50100:8080 -d --name app localhost:5000/task3app:latest
+
+```
+
+##### Demo
+Deploy to blue:
+![blue](images/t3i1.gif)
+Deploy to green:
+![green](images/t3i2.gif)
 
 
 
